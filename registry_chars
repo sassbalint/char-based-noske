@@ -1,0 +1,83 @@
+MAINTAINER "sass.balint@nytud.hu"
+INFO "MOMA - moldvai magyar korpusz, alapegység: hang"
+NAME "MOMA - moldvai magyar korpusz, alapegység: hang"
+ENCODING "UTF-8"
+LANGUAGE ""
+
+PATH   '/corpora/moma_chars/indexed/'
+VERTICAL  '/corpora/moma_chars/vertical/source_chars'
+
+INFOHREF "XXX"
+TAGSETDOC "XXX"
+
+FULLREF "doc.file,doc.link,doc.place,doc.coords"
+
+ATTRIBUTE eredeti {
+  LABEL "eredeti"
+  TYPE "FD_FGD"
+}
+ATTRIBUTE word {
+  LABEL "normalizált ('word')"
+  TYPE "FD_FGD"
+}
+
+ATTRIBUTE lc {
+  LABEL "normalizált kisbetűs"
+  DYNAMIC    utf8lowercase
+  DYNLIB     internal
+  ARG1       "C"
+  FUNTYPE    s
+  FROMATTR   word
+  TYPE       index
+  TRANSQUERY yes
+}
+ATTRIBUTE eredeti_kisbetus {
+  LABEL "eredeti kisbetűs"
+  DYNAMIC    utf8lowercase
+  DYNLIB     internal
+  ARG1       "C"
+  FUNTYPE    s
+  FROMATTR   eredeti
+  TYPE       index
+  TRANSQUERY yes
+}
+
+
+STRUCTURE doc {
+  ATTRIBUTE file {
+    LABEL "azonosító"
+  }
+  ATTRIBUTE link {
+    LABEL "teljes interjú"
+  }
+  ATTRIBUTE place {
+    LABEL "kutatópont"
+  }
+  ATTRIBUTE coords {
+    LABEL "koordináták"
+  }
+}
+
+STRUCTURE s { 
+  ATTRIBUTE audio { 
+    LABEL "hangfájl"
+    URLTEMPLATE "https://nlp.nytud.hu/csango/%s"
+    MEDIATYPE "audio" 
+  } 
+}
+
+STRUCTURE w {
+  ATTRIBUTE attrs {
+    LABEL "attribútumok egyben"
+  }
+}
+
+STRUCTURE ima
+STRUCTURE enek
+STRUCTURE nevetes
+STRUCTURE kohoges
+#STRUCTURE siras
+
+STRUCTURE egybe
+STRUCTURE szunet
+
