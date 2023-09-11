@@ -5,12 +5,27 @@ Convert classic word-basd corpus to a char-based corpus.
 
 import re
 import sys
+import unicodedata
 
-from itertools import chain, islice
-from more_itertools import consume, map_if
+from itertools import islice
+from more_itertools import consume
 
 
 SEP = '\t'
+
+
+def combinedchars(string):
+    """
+    Creates a list of chars from a string handling
+    combining diacritical marks together with the preceding char.
+    """ 
+    result = []
+    for char in string:
+        if unicodedata.combining(char):
+            result[-1] += char
+        else:
+            result.append(char)
+    return(result)
 
 
 def skip(it, n):
@@ -55,9 +70,8 @@ def process(it):
         return f'<{TAGNAME} attrs="' + ' '.join(fields) + '">' # XXX to be refactored
 
     # TODO XXX
-    #  * combining karakatereket ne válassza le!
     #  * rendesen megcsinálni az illesztést!
-    #    ugy sokszo 2 char vs 1 char van!
+    #    ugye sokszor 2 char vs 1 char van!
     #  * rendesen megcsinálni az eredeti attribútumok megjelenítését
 
     # egy iterátor feldolgozása során hogyan tudok úgy egy elemből egy iterátort csinálni úgy, hogy szépen belesimuljon az eredeti iterátor elemeinek sorába? hát pl. így! :)
@@ -67,7 +81,8 @@ def process(it):
             if cond(elem):
                 fields = elem.split(sep)
                 yield toxml(fields) # XXX to be refactored
-                for ch1, ch2 in zip(fields[ORIG], fields[NORM]):
+                orig, norm = combinedchars(fields[ORIG]), combinedchars(fields[NORM])
+                for ch1, ch2 in zip(orig, norm):
                     yield f"{ch1}\t{ch2}"
                 yield f"</{TAGNAME}>" # XXX to be refactored
             else:
